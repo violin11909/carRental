@@ -1,0 +1,311 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Library API",
+    "version": "1.0.0",
+    "description": "Car Booking API"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api/v1"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Create a new user",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user was successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Some server error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Log-in to the system",
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Log-in Successfully"
+          },
+          "500": {
+            "description": "Some server error"
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Return information about me",
+        "tags": [
+          "User"
+        ],
+        "responses": {
+          "201": {
+            "description": "My user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Some server error"
+          }
+        }
+      }
+    },
+    "/cars": {
+      "post": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "Create a new car",
+        "tags": [
+          "Cars"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Car"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The car was successfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Some server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Returns the list of all the cars",
+        "tags": [
+          "Cars"
+        ],
+        "responses": {
+          "200": {
+            "description": "The list of the cars",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": null,
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cars/{id}": {
+      "get": {
+        "summary": "Get the car by id",
+        "tags": [
+          "Cars"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The car id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The car description by id",
+            "contents": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The car was not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "tel",
+          "password"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of user"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email of user"
+          },
+          "tel": {
+            "type": "string",
+            "description": "Telephone number of user"
+          },
+          "role": {
+            "type": "string",
+            "description": "Role of user (admin or user), default is user"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password of user"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-08-20",
+            "description": "Date of creation (default is current date-time)"
+          }
+        }
+      },
+      "Car": {
+        "type": "object",
+        "required": [
+          "model",
+          "description",
+          "seats",
+          "doors",
+          "largebags",
+          "smallbags",
+          "automatic",
+          "dayRate"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Name of the car model"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the car"
+          },
+          "picture": {
+            "type": "string",
+            "description": "Picture of the car"
+          },
+          "seats": {
+            "type": "integer",
+            "description": "Number of seats (Passenger Capacity)"
+          },
+          "doors": {
+            "type": "integer",
+            "description": "Number of doors"
+          },
+          "largebags": {
+            "type": "integer",
+            "description": "Number of large bags that can be accommodated"
+          },
+          "smallbags": {
+            "type": "integer",
+            "description": "Number of small bags that can be accommodated"
+          },
+          "automatic": {
+            "type": "boolean",
+            "description": "Identify the car uses automatic transmission or not"
+          },
+          "dayRate": {
+            "type": "number",
+            "description": "Daily rental rate including insurance"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "The user API"
+    },
+    {
+      "name": "Cars",
+      "description": "The cars managing API"
+    }
+  ]
+}
